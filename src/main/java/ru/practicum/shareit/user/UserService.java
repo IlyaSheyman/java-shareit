@@ -39,9 +39,9 @@ public class UserService {
 
     public List<UserDto> getUsers() {
         List<UserDto> usersDto = new ArrayList<>();
-        for (User u: userStorage.getAll()) {
+        for (User u : userStorage.getAll()) {
             usersDto.add(userMapper.toUserDto(u));
-        };
+        }
         return usersDto;
     }
 
