@@ -28,17 +28,25 @@ public class ItemService {
         return itemMapper.toItemDto(itemStorage.add(item, userId));
     }
 
-    public ItemDto updateItem(int id, Item item) {
-        return itemMapper.toItemDto(itemStorage.update(id, item));
+    public ItemDto updateItem(int id, ItemDto item, int userID) {
+        return itemMapper.toItemDto(itemStorage.update(id, item, userID));
     }
 
-    public ItemDto getItem(int id) {
-        return itemMapper.toItemDto(itemStorage.get(id));
+    public ItemDto getItem(int id, int userId) {
+        return itemMapper.toItemDto(itemStorage.get(id, userId));
     }
 
-    public List<ItemDto> getItems() {
+    public List<ItemDto> getItems(int userId) {
         List<ItemDto> itemsDto = new ArrayList<>();
-        for (Item i : itemStorage.getAll()) {
+        for (Item i : itemStorage.getAll(userId)) {
+            itemsDto.add(itemMapper.toItemDto(i));
+        }
+        return itemsDto;
+    }
+
+    public List<ItemDto> search(String text) {
+        List<ItemDto> itemsDto = new ArrayList<>();
+        for (Item i : itemStorage.search(text)) {
             itemsDto.add(itemMapper.toItemDto(i));
         }
         return itemsDto;

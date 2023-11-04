@@ -9,17 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -38,21 +35,31 @@ public class ItemController {
 
     @ResponseBody
     @PatchMapping("/{id}")
-    public ItemDto updateItem(@Valid @RequestBody Item item, @PathVariable int id) {
+    public ItemDto updateItem(@Valid @RequestBody ItemDto item,
+                              @PathVariable int id,
+                              @RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получен запрос на обновление вещи.");
-        return itemService.updateItem(id, item);
+        return itemService.updateItem(id, item, userId);
     }
 
     @ResponseBody
     @GetMapping("/{id}")
-    public ItemDto getItemById(@PathVariable int id) {
+    public ItemDto getItemById(@PathVariable int id,
+                               @RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получен запрос на получение вещи с ID - {}.", id);
-        return itemService.getItem(id);
+        return itemService.getItem(id, userId);
     }
 
     @ResponseBody
     @GetMapping
-    public List<ItemDto> getItems() {
-        return itemService.getItems();
+    public List<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") int userId) {
+        return itemService.getItems(userId);
+    }
+
+    @ResponseBody
+    @GetMapping("/search")
+    public List<ItemDto> search(@RequestHeader(value = "X-Sharer-User-Id", required = false) int userId,
+                                @RequestParam String text) {
+        return itemService.search(text);
     }
 }
