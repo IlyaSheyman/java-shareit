@@ -7,6 +7,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
+import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +18,20 @@ public class ItemService {
 
     private final ItemStorage itemStorage;
     private final ItemMapper itemMapper;
+    private final UserStorage userStorage;
 
     @Autowired
-    public ItemService(ItemStorage itemStorage) {
+    public ItemService(ItemStorage itemStorage, UserStorage userStorage) {
         this.itemStorage = itemStorage;
+        this.userStorage = userStorage;
         this.itemMapper = new ItemMapper();
     }
 
-    public ItemDto addItem(ItemDto item, int userId) {
-        return itemMapper.toItemDto(itemStorage.add(item, userId));
+    public ItemDto addItem(ItemDto itemDto, int userId) {
+        Item item = new Item();
+        item.setOwner(userStorage.get(userId).getId()); // вынесено в сервис, так как в ItemStorage
+        // нельзя импортировать другой репозиторий (UserStorage)
+        return itemMapper.toItemDto(itemStorage.add(itemDto, item, userId));
     }
 
     public ItemDto updateItem(int id, ItemDto item, int userID) {

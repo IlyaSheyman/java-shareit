@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -17,10 +19,12 @@ import java.util.List;
 public class UserService {
     private final UserStorage userStorage;
     private final UserMapper userMapper;
+    private final ItemStorage itemStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(UserStorage userStorage, ItemStorage itemStorage) {
         this.userStorage = userStorage;
+        this.itemStorage = itemStorage;
         this.userMapper = new UserMapper();
     }
 
@@ -46,6 +50,9 @@ public class UserService {
     }
 
     public UserDto delete(int id) {
+        for (Item item: itemStorage.getAll(id)) {
+            itemStorage.delete(item.getId());
+        }
         return userMapper.toUserDto(userStorage.delete(id));
     }
 

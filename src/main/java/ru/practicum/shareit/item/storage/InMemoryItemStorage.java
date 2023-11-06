@@ -10,7 +10,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.storage.InMemoryUserStorage;
-import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,22 +20,17 @@ import java.util.List;
 public class InMemoryItemStorage implements ItemStorage {
     private HashMap<Integer, Item> items;
     private int seq = 0;
-    private UserStorage userStorage;
 
     @Autowired
     public InMemoryItemStorage(InMemoryUserStorage userStorage) {
         this.items = new HashMap<>();
-        this.userStorage = userStorage;
     }
 
     @Override
-    public Item add(ItemDto itemDto, int userId) {
+    public Item add(ItemDto itemDto, Item item, int userId) {
         if (itemDto.getName().isEmpty() || itemDto.getDescription() == null || !itemDto.getAvailable().isPresent()) {
             throw new ValidationException("Ошибка валидации вещи");
         } else {
-            Item item = new Item();
-
-            item.setOwner(userStorage.get(userId).getId());
             seq++;
             item.setId(seq);
             item.setDescription(itemDto.getDescription());

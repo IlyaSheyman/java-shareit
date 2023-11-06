@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemStorage {
-    Item add(ItemDto item, int userId);
+    Item add(ItemDto itemDto, Item item, int userId);
 
     Item update(int id, ItemDto item, int userId);
 
