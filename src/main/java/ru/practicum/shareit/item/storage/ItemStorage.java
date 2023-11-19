@@ -10,7 +10,7 @@ public interface ItemStorage {
 
     Item update(int id, ItemDto item, int userId);
 
-    Item delete(int id);
+    Item delete(int id, int userId);
 
     Item get(int id, int userId);
 

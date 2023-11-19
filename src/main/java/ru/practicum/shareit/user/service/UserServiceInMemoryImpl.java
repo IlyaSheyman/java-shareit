@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,32 +15,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Service
-public class UserService {
+@Service("UserServiceInMemoryImpl")
+public class UserServiceInMemoryImpl implements UserService {
+
     private final UserStorage userStorage;
     private final UserMapper userMapper;
     private final ItemStorage itemStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage, ItemStorage itemStorage) {
+    public UserServiceInMemoryImpl(UserStorage userStorage, ItemStorage itemStorage) {
         this.userStorage = userStorage;
         this.itemStorage = itemStorage;
         this.userMapper = new UserMapper();
     }
 
+    @Override
     public UserDto addUser(User user) {
         isValidUser(user);
         return userMapper.toUserDto(userStorage.add(user));
     }
 
+    @Override
     public UserDto updateUser(int id, User user) {
         return userMapper.toUserDto(userStorage.update(id, user));
     }
 
+    @Override
     public UserDto getUser(int id) {
         return userMapper.toUserDto(userStorage.get(id));
     }
 
+    @Override
     public List<UserDto> getUsers() {
         List<UserDto> usersDto = new ArrayList<>();
         for (User u : userStorage.getAll()) {
@@ -49,9 +54,10 @@ public class UserService {
         return usersDto;
     }
 
+    @Override
     public UserDto delete(int id) {
         for (Item item: itemStorage.getAll(id)) {
-            itemStorage.delete(item.getId());
+            itemStorage.delete(item.getId(), id);
         }
         return userMapper.toUserDto(userStorage.delete(id));
     }

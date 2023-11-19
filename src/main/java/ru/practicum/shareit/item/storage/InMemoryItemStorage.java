@@ -46,7 +46,7 @@ public class InMemoryItemStorage implements ItemStorage {
 
     @Override
     public Item update(int id, ItemDto item, int userId) {
-        if (items.get(id).getOwner() == userId) {
+        if (items.get(id).getOwner().getId() == userId) {
             if (items.containsKey(id)) {
                 Item previous = items.remove(id);
 
@@ -74,11 +74,15 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     @Override
-    public Item delete(int id) {
-        if (items.containsKey(id)) {
-            return items.remove(id);
+    public Item delete(int id, int userId) {
+        if (userId == items.get(id).getOwner().getId()) {
+            if (items.containsKey(id)) {
+                return items.remove(id);
+            } else {
+                throw new NotFoundException("Вещь с id " + id + " не найдена");
+            }
         } else {
-            throw new NotFoundException("Вещь с id " + id + " не найдена");
+            throw new RuntimeException("Удалить вещь может только её владелец");
         }
     }
 
@@ -100,7 +104,7 @@ public class InMemoryItemStorage implements ItemStorage {
         List<Item> itemValues = new ArrayList<>();
 
         for (Item i: items.values()) {
-            if (i.getOwner() == userId) {
+            if (i.getOwner().getId() == userId) {
                 itemValues.add(i);
             }
         }
