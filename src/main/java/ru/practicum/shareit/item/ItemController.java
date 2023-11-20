@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +19,15 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/items")
 public class ItemController {
 
-    @Qualifier("itemServiceDbImpl")
     private final ItemService itemService;
+
+    public ItemController(@Qualifier("ItemServiceDbImpl") ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     @ResponseBody
     @PostMapping

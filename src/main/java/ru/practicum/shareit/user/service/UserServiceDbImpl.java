@@ -1,22 +1,18 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.item.service.ItemServiceDbImpl;
 import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
-import java.net.BindException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,16 +20,18 @@ import java.util.List;
 @Service("UserServiceDbImpl")
 public class UserServiceDbImpl implements UserService {
 
-    private final UserRepository userRepository;
+    public final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final ItemService itemService;
+    private final ItemServiceDbImpl itemService;
     private final ItemRepository itemRepository;
 
-    public UserServiceDbImpl(UserRepository userRepository, ItemService itemService, ItemRepository itemRepository) {
+    public UserServiceDbImpl(UserRepository userRepository,
+                             ItemServiceDbImpl itemServiceDb,
+                             ItemRepository itemRepository) {
         this.userRepository = userRepository;
         this.userMapper = new UserMapper();
-        this.itemService = itemService;
         this.itemRepository = itemRepository;
+        this.itemService = itemServiceDb;
     }
 
     @Override
@@ -54,7 +52,6 @@ public class UserServiceDbImpl implements UserService {
             }
 
             User previous = userRepository.getById(id);
-            userRepository.delete(user);
 
             if (user.getName() != null && user.getName() != previous.getName()) {
                 previous.setName(user.getName());

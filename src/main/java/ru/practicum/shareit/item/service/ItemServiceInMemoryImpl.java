@@ -12,8 +12,8 @@ import ru.practicum.shareit.user.storage.UserStorage;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 @Slf4j
+@Service("ItemServiceInMemoryImpl")
 public class ItemServiceInMemoryImpl implements ItemService {
 
     private final ItemStorage itemStorage;
