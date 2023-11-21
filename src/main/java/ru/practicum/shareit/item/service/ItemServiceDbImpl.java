@@ -1,8 +1,6 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.AccessToItemDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -12,7 +10,6 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserServiceDbImpl;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.ArrayList;
