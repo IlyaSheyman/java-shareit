@@ -23,9 +23,9 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "start")
+    @Column(name = "start_date")
     private LocalDateTime start;
-    @Column(name = "end")
+    @Column(name = "end_date")
     private LocalDateTime end;
     @OneToOne
     private Item item;

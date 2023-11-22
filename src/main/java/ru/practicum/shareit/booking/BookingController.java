@@ -2,16 +2,22 @@ package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingDtoExtended;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * TODO Sprint add-bookings.
@@ -29,23 +35,42 @@ public class BookingController {
 
     @ResponseBody
     @PostMapping
-    public BookingDto addBooking(@Valid @RequestBody BookingDto bookingDto,
-                           @RequestHeader("X-Sharer-User-Id") int userId) {
+    public BookingDtoExtended addBooking(@Valid @RequestBody BookingDto bookingDto,
+                                         @RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получен запрос на создание нового бронирования.");
 
         return bookingService.addBooking(bookingDto, userId);
     }
+
+    @ResponseBody
+    @PatchMapping("/{bookingId}")
+    public BookingDtoExtended approveBooking(@RequestHeader(value = "X-Sharer-User-Id") int userId,
+                                             @PathVariable int bookingId,
+                                             @RequestParam boolean approved) {
+        log.info("Получен запрос на обновление статуса бронирования");
+        return bookingService.approveBooking(bookingId, userId, approved);
+    }
+
+    @ResponseBody
+    @GetMapping("/{bookingId}")
+    public BookingDtoExtended getBooking(@RequestHeader(value = "X-Sharer-User-Id") int userId,
+                                         @PathVariable int bookingId) {
+        log.info("Получен запрос на получение информации о бронировании");
+
+        return bookingService.getBooking(userId, bookingId);
+    }
+
+    @ResponseBody
+    @GetMapping
+    public List<BookingDtoExtended> getBooking(@RequestHeader(value = "X-Sharer-User-Id") int userId,
+                                               @RequestParam(defaultValue = "ALL") String state) {
+        log.info("Получен запрос на получение информации о бронированиях пользователя");
+
+        return bookingService.getBookingsByUserId(userId, state);
+    }
 }
 
 
-//
-//    @ResponseBody
-//    @PostMapping
-//    public ItemDto addItem(@Valid @RequestBody ItemDto item,
-//                           @RequestHeader("X-Sharer-User-Id") int userId) {
-//        log.info("Получен запрос на добавление вещи.");
-//        return itemService.addItem(item, userId);
-//    }
 //
 //    @ResponseBody
 //    @PatchMapping("/{id}")
