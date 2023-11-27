@@ -23,4 +23,11 @@ public class BookingMapper {
                 new UserDtoSmall(booking.getBooker().getId())
         );
     }
+
+    public BookingDtoForGetItem toBookingDtoForGetItem(Booking booking) {
+        return new BookingDtoForGetItem(
+                booking.getId(),
+                booking.getBooker().getId()
+        );
+    }
 }

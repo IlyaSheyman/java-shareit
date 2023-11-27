@@ -3,7 +3,10 @@ package ru.practicum.shareit.item.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.item.comment.dto.CommentDto;
+import ru.practicum.shareit.item.comment.dto.CommentDtoTextOnly;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithBookings;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
@@ -41,15 +44,15 @@ public class ItemServiceInMemoryImpl implements ItemService {
     }
 
     @Override
-    public ItemDto getItem(int id, int userId) {
-        return itemMapper.toItemDto(itemStorage.get(id, userId));
+    public ItemDtoWithBookings getItem(int id, int userId) {
+        return itemMapper.toItemDtoWithBookings(itemStorage.get(id, userId));
     }
 
     @Override
-    public List<ItemDto> getItems(int userId) {
-        List<ItemDto> itemsDto = new ArrayList<>();
+    public List<ItemDtoWithBookings> getItems(int userId) {
+        List<ItemDtoWithBookings> itemsDto = new ArrayList<>();
         for (Item i : itemStorage.getAll(userId)) {
-            itemsDto.add(itemMapper.toItemDto(i));
+            itemsDto.add(itemMapper.toItemDtoWithBookings(i));
         }
         return itemsDto;
     }
@@ -66,5 +69,10 @@ public class ItemServiceInMemoryImpl implements ItemService {
     @Override
     public ItemDto deleteItem(int id, int userId) {
         return itemMapper.toItemDto(itemStorage.delete(id, userId));
+    }
+
+    @Override
+    public CommentDto addComment(int userId, int itemId, CommentDtoTextOnly comment) {
+        return null;
     }
 }

@@ -11,7 +11,6 @@ public interface BookingService {
     BookingDtoExtended approveBooking(int bookingId, int userId, boolean isApproved);
     BookingDtoExtended getBooking(int userId, int bookingId);
     List<BookingDtoExtended> getBookingsByUserId(int userId, String state);
-    BookingDto updateBooking(int userId, BookingDto bookingDto, int id);
-    BookingDto getBookingsByItem();
+    List<BookingDtoExtended> getBookingsByItemOwner(int userId, String state);
 
 }

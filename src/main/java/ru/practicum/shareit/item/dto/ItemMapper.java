@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.dto;
 
+import ru.practicum.shareit.booking.dto.BookingDtoForGetItem;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
@@ -18,16 +19,31 @@ public class ItemMapper {
                 new ItemRequest()
         );
     }
-/** В этом методе надо будет вернуть строку item.getRequest() != null ? item.getRequest().getId() : null,
- * когда буду работать в ветке add-requests **/
+
+    /**
+     * В этом методе надо будет вернуть строку item.getRequest() != null ? item.getRequest().getId() : null,
+     * когда буду работать в ветке add-requests
+     **/
 
     public ItemDto toItemDto(Item item) {
-       return new ItemDto(
-               item.getId(),
-               item.getName(),
-               item.getDescription(),
-               Optional.of(item.isAvailable()),
+        return new ItemDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                Optional.of(item.isAvailable()),
                 0
-       );
-   }
+        );
+    }
+
+    public ItemDtoWithBookings toItemDtoWithBookings(Item item) {
+        return new ItemDtoWithBookings(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                Optional.of(item.isAvailable()),
+                0,
+                null,
+                null
+        );
+    }
 }

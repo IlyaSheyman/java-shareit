@@ -62,11 +62,20 @@ public class BookingController {
 
     @ResponseBody
     @GetMapping
-    public List<BookingDtoExtended> getBooking(@RequestHeader(value = "X-Sharer-User-Id") int userId,
+    public List<BookingDtoExtended> getBookingByUserId(@RequestHeader(value = "X-Sharer-User-Id") int userId,
                                                @RequestParam(defaultValue = "ALL") String state) {
-        log.info("Получен запрос на получение информации о бронированиях пользователя");
+        log.info("Получен запрос на получение списка всех бронирований текущего пользователя");
 
         return bookingService.getBookingsByUserId(userId, state);
+    }
+
+    @ResponseBody
+    @GetMapping("/owner")
+    public List<BookingDtoExtended> getBookingsForAllItems(@RequestHeader(value = "X-Sharer-User-Id") int userId,
+                                                              @RequestParam(defaultValue = "ALL") String state) {
+        log.info("Получен запрос на получение списка бронирований для всех вещей текущего пользователя");
+
+        return bookingService.getBookingsByItemOwner(userId, state);
     }
 }
 

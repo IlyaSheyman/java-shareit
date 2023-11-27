@@ -2,10 +2,16 @@ package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.AccessToItemDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.comment.dto.CommentDto;
+import ru.practicum.shareit.item.comment.dto.CommentDtoTextOnly;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithBookings;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
@@ -22,11 +28,17 @@ public class ItemServiceDbImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final BookingMapper bookingMapper;
 
-    public ItemServiceDbImpl(ItemRepository itemRepository, UserRepository userRepository) {
+    public ItemServiceDbImpl(ItemRepository itemRepository,
+                             UserRepository userRepository,
+                             BookingRepository bookingRepository) {
         this.itemRepository = itemRepository;
         this.itemMapper = new ItemMapper();
+        this.bookingMapper = new BookingMapper();
         this.userRepository = userRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     @Override
@@ -74,10 +86,17 @@ public class ItemServiceDbImpl implements ItemService {
 
 
     @Override
-    public ItemDto getItem(int id, int userId) {
+    public ItemDtoWithBookings getItem(int id, int userId) {
         if (userId >= 0) {
             if (itemRepository.existsById(id)) {
-                return itemMapper.toItemDto(itemRepository.getById(id));
+                Item item = itemRepository.getById(id);
+                ItemDtoWithBookings itemDto = itemMapper.toItemDtoWithBookings(itemRepository.getById(id));
+
+                if (item.getOwner().getId() == userId) {
+                    setLastAndNextBookings(id, itemDto);
+                }
+
+                return itemDto;
             } else {
                 throw new NotFoundException("Вещь с id " + id + " не найдена");
             }
@@ -86,12 +105,27 @@ public class ItemServiceDbImpl implements ItemService {
         }
     }
 
+    private void setLastAndNextBookings(int itemId, ItemDtoWithBookings itemDto) {
+        List<Booking> lastBookings = bookingRepository.findLastBookingByItemId(itemId);
+        List<Booking> nextBookings = bookingRepository.findNextBookingByItemId(itemId);
+
+        if (!lastBookings.isEmpty()) {
+            itemDto.setLastBooking(bookingMapper.toBookingDtoForGetItem(lastBookings.get(0)));
+        }
+
+        if (!nextBookings.isEmpty()) {
+            itemDto.setNextBooking(bookingMapper.toBookingDtoForGetItem(nextBookings.get(0)));
+        }
+    }
+
     @Override
-    public List<ItemDto> getItems(int userId) {
-        List<ItemDto> itemsDto = new ArrayList<>();
+    public List<ItemDtoWithBookings> getItems(int userId) {
+        List<ItemDtoWithBookings> itemsDto = new ArrayList<>();
         for (Item i : itemRepository.findAll()) {
             if (i.getOwner().getId() == userId) {
-                itemsDto.add(itemMapper.toItemDto(i));
+                ItemDtoWithBookings itemDto = itemMapper.toItemDtoWithBookings(i);
+                setLastAndNextBookings(i.getId(), itemDto);
+                itemsDto.add(itemDto);
             }
         }
         return itemsDto;
@@ -122,5 +156,10 @@ public class ItemServiceDbImpl implements ItemService {
         }
 
         return itemMapper.toItemDto(itemToDelete);
+    }
+
+    @Override
+    public CommentDto addComment(int userId, int itemId, CommentDtoTextOnly comment) {
+        return null;
     }
 }
