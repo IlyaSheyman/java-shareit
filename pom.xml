@@ -19,6 +19,10 @@
 		<java.version>11</java.version>
 	</properties>
 
+	<activeProfiles>
+		<activeProfile>check</activeProfile>
+	</activeProfiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
