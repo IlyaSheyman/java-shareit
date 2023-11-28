@@ -19,10 +19,6 @@
 		<java.version>11</java.version>
 	</properties>
 
-	<activeProfiles>
-		<activeProfile>check</activeProfile>
-	</activeProfiles>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -68,4 +64,13 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>check</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
 </project>
