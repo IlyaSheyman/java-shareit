@@ -144,7 +144,7 @@ public class BookingServiceDbImpl implements BookingService {
                         LocalDateTime.now(),
                         LocalDateTime.now());
                 break;
-            case ("**PAST**"):
+            case ("PAST"):
                 bookings = bookingRepository.findByBooker_IdAndEndIsBefore(userId,
                         LocalDateTime.now());
                 break;
@@ -202,7 +202,7 @@ public class BookingServiceDbImpl implements BookingService {
                             LocalDateTime.now()));
                 }
                 break;
-            case ("**PAST**"):
+            case ("PAST"):
                 for (Integer i : itemIds) {
                     bookings.addAll(bookingRepository.findByItem_IdAndEndIsBefore(i,
                             LocalDateTime.now()));

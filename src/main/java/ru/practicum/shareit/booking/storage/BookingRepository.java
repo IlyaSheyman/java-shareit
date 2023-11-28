@@ -30,7 +30,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<Booking> findByItem_IdAndStatusIs(int bookerId, Status status);
 
-    @Query("SELECT b FROM Booking b WHERE b.item.id = ?1 AND b.end <= CURRENT_TIMESTAMP ORDER BY b.end DESC")
+    @Query("SELECT b FROM Booking b WHERE b.item.id = ?1 AND (b.end <= CURRENT_TIMESTAMP OR (b.start < CURRENT_TIMESTAMP AND b.end > CURRENT_TIMESTAMP)) ORDER BY b.end DESC")
     List<Booking> findLastBookingByItemId(int itemId);
 
     @Query("SELECT b FROM Booking b WHERE b.item.id = ?1 AND b.start >= CURRENT_TIMESTAMP ORDER BY b.start  ASC")

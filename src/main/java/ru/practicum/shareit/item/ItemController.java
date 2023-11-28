@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.dto.CommentDtoTextOnly;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoWithBookings;
+import ru.practicum.shareit.item.dto.ItemDtoBookingsComments;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -51,15 +51,15 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/{id}")
-    public ItemDtoWithBookings getItemById(@PathVariable int id,
-                                           @RequestHeader("X-Sharer-User-Id") int userId) {
+    public ItemDtoBookingsComments getItemById(@PathVariable int id,
+                                               @RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получен запрос на получение вещи с ID - {}.", id);
         return itemService.getItem(id, userId);
     }
 
     @ResponseBody
     @GetMapping
-    public List<ItemDtoWithBookings> getItems(@RequestHeader("X-Sharer-User-Id") int userId) {
+    public List<ItemDtoBookingsComments> getItems(@RequestHeader("X-Sharer-User-Id") int userId) {
         return itemService.getItems(userId);
     }
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.dto.CommentDtoTextOnly;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoWithBookings;
+import ru.practicum.shareit.item.dto.ItemDtoBookingsComments;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
@@ -44,13 +44,13 @@ public class ItemServiceInMemoryImpl implements ItemService {
     }
 
     @Override
-    public ItemDtoWithBookings getItem(int id, int userId) {
+    public ItemDtoBookingsComments getItem(int id, int userId) {
         return itemMapper.toItemDtoWithBookings(itemStorage.get(id, userId));
     }
 
     @Override
-    public List<ItemDtoWithBookings> getItems(int userId) {
-        List<ItemDtoWithBookings> itemsDto = new ArrayList<>();
+    public List<ItemDtoBookingsComments> getItems(int userId) {
+        List<ItemDtoBookingsComments> itemsDto = new ArrayList<>();
         for (Item i : itemStorage.getAll(userId)) {
             itemsDto.add(itemMapper.toItemDtoWithBookings(i));
         }

@@ -27,7 +27,14 @@ public class Comment {
     @ManyToOne
     private Item item;
     @ManyToOne
-    private User user;
+    private User author;
     @Column(name = "created")
     private LocalDateTime created;
+
+    public Comment(String text, Item item, User author, LocalDateTime created) {
+        this.text = text;
+        this.item = item;
+        this.author = author;
+        this.created = created;
+    }
 }
