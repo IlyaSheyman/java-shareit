@@ -19,15 +19,12 @@ import ru.practicum.shareit.booking.service.BookingService;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-bookings.
- */
 @RestController
 @Slf4j
 @RequestMapping(path = "/bookings")
 public class BookingController {
 
-    BookingService bookingService;
+    private BookingService bookingService;
 
     public BookingController(@Qualifier("BookingServiceDbImpl") BookingService bookingService) {
         this.bookingService = bookingService;
@@ -78,36 +75,3 @@ public class BookingController {
         return bookingService.getBookingsByItemOwner(userId, state);
     }
 }
-
-
-//
-//    @ResponseBody
-//    @PatchMapping("/{id}")
-//    public ItemDto updateItem(@Valid @RequestBody ItemDto item,
-//                              @PathVariable int id,
-//                              @RequestHeader("X-Sharer-User-Id") int userId) {
-//        log.info("Получен запрос на обновление вещи.");
-//        return itemService.updateItem(id, item, userId);
-//    }
-//
-//    @ResponseBody
-//    @GetMapping("/{id}")
-//    public ItemDto getItemById(@PathVariable int id,
-//                               @RequestHeader("X-Sharer-User-Id") int userId) {
-//        log.info("Получен запрос на получение вещи с ID - {}.", id);
-//        return itemService.getItem(id, userId);
-//    }
-//
-//    @ResponseBody
-//    @GetMapping
-//    public List<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") int userId) {
-//        return itemService.getItems(userId);
-//    }
-//
-//    @ResponseBody
-//    @GetMapping("/search")
-//    public List<ItemDto> search(@RequestHeader(value = "X-Sharer-User-Id", required = false) int userId,
-//                                @RequestParam String text) {
-//        return itemService.search(text);
-//    }
-//}
