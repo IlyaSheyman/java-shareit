@@ -4,5 +4,5 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 
 public interface ItemRequestService {
 
-    ItemRequestDto addItemRequest(ItemRequestDto)
+    ItemRequestDto addItemRequest(ItemRequestDto itemRequestDto);
 }

@@ -30,7 +30,6 @@ public class ItemRequestController {
     public ItemRequestDto addItemRequest(@Valid @RequestBody ItemRequestDto request,
                                   @RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получен запрос на добавление вещи.");
-        itemRequestService.
-        return ;
+        return null;
     }
 }
