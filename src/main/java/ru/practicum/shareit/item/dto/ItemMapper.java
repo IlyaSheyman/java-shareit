@@ -15,7 +15,7 @@ public class ItemMapper {
                 itemDto.getDescription(),
                 itemDto.getAvailable().get(),
                 user,
-                new ItemRequest()
+                null
         );
     }
 
@@ -30,7 +30,7 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 Optional.of(item.isAvailable()),
-                0
+                null
         );
     }
 
@@ -40,7 +40,7 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 Optional.of(item.isAvailable()),
-                0,
+                null,
                 null,
                 null
         );

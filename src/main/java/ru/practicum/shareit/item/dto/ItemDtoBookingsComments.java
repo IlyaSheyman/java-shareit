@@ -13,7 +13,7 @@ public class ItemDtoBookingsComments {
     private String name;
     private String description;
     private Optional<Boolean> available;
-    private int requestId;
+    private Integer requestId;
     private BookingDtoForGetItem lastBooking;
     private BookingDtoForGetItem nextBooking;
     private List<CommentDto> comments;
@@ -22,7 +22,7 @@ public class ItemDtoBookingsComments {
                                    String name,
                                    String description,
                                    Optional<Boolean> available,
-                                   int requestId,
+                                   Integer requestId,
                                    BookingDtoForGetItem lastBooking,
                                    BookingDtoForGetItem nextBooking) {
         this.id = id;
