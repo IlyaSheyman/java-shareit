@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -11,14 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "items")
+@Builder
 public class Item {
 
     public Item(int id, String name, String description, boolean available, User owner, ItemRequest request) {

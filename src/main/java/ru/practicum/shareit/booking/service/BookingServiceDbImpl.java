@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoExtended;
@@ -136,7 +137,9 @@ public class BookingServiceDbImpl implements BookingService {
 
     public List<Booking> getBookingsByStateAndId(String state, int userId, int from, int size) {
         List<Booking> bookings = new ArrayList<>();
-        Pageable pageRequest = PageRequest.of(from/size, size) ;
+        Pageable pageRequest = PageRequest.of(from/size,
+                size,
+                Sort.by(Sort.Direction.DESC, "start")) ;
         switch (state) {
             case ("ALL"):
                 bookings = bookingRepository.findByBooker_Id(userId, pageRequest);
@@ -190,7 +193,10 @@ public class BookingServiceDbImpl implements BookingService {
     }
 
     public List<Booking> getBookingsByOwner(String state, int userId, int from, int size) {
-        PageRequest pageRequest = PageRequest.of(from/size, size);
+        PageRequest pageRequest = PageRequest.of(from/size,
+                size,
+                Sort.by(Sort.Direction.DESC, "start"));
+
         List<Item> items = itemRepository.findByOwner_Id(userId);
         List<Integer> itemIds = items.stream()
                 .map(Item::getId)

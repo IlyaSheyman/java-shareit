@@ -2,6 +2,7 @@ package ru.practicum.shareit.request.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
@@ -95,7 +96,11 @@ public class ItemRequestServiceDbImpl implements ItemRequestService {
         } else {
             List<ItemRequestDtoWithItems> allRequests = new ArrayList<>();
 
-            for (ItemRequest req : requestRepository.findByRequestor_IdNot(userId, PageRequest.of(from/size, size))) {
+            for (ItemRequest req : requestRepository.findByRequestor_IdNot(userId,
+                    PageRequest.of(from/size,
+                            size,
+                            Sort.by(Sort.Direction.DESC, "created")))) {
+
                 ItemRequestDtoWithItems requestDtoWithItems = requestMapper.toRequestDtoWithItems(req);
                 requestDtoWithItems.setItems(
                         itemRepository.findByRequest_Id(req.getId())
