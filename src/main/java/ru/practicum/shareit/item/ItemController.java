@@ -19,6 +19,7 @@ import ru.practicum.shareit.item.dto.ItemDtoBookingsComments;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @Slf4j
@@ -59,15 +60,19 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping
-    public List<ItemDtoBookingsComments> getItems(@RequestHeader("X-Sharer-User-Id") int userId) {
-        return itemService.getItems(userId);
+    public List<ItemDtoBookingsComments> getItems(@RequestHeader("X-Sharer-User-Id") int userId,
+                                                  @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
+                                                  @RequestParam(value = "size", defaultValue = "20") @Min(0) Integer size) {
+        return itemService.getItems(userId, from, size);
     }
 
     @ResponseBody
     @GetMapping("/search")
     public List<ItemDto> search(@RequestHeader(value = "X-Sharer-User-Id", required = false) int userId,
-                                @RequestParam String text) {
-        return itemService.search(text);
+                                @RequestParam String text,
+                                @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
+                                @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
+        return itemService.search(userId, text, from, size);
     }
 
     @ResponseBody

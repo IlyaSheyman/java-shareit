@@ -12,7 +12,8 @@ public class ItemRequestMapper {
         return new ItemRequest(
                 requestDto.getId(),
                 requestDto.getDescription(),
-                new User()
+                new User(),
+                requestDto.getCreated()
         );
     }
 
@@ -20,7 +21,7 @@ public class ItemRequestMapper {
         return new ItemRequestDto(
                 request.getId(),
                 request.getDescription(),
-                LocalDateTime.now()
+                request.getCreated()
         );
     }
 
@@ -28,7 +29,7 @@ public class ItemRequestMapper {
         return new ItemRequestDtoWithItems(
                 request.getId(),
                 request.getDescription(),
-                LocalDateTime.now(),
+                request.getCreated(),
                 new ArrayList<>()
         );
     }

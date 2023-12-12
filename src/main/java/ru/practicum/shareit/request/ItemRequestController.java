@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDtoWithItems;
 import ru.practicum.shareit.request.service.ItemRequestService;
@@ -54,7 +53,7 @@ public class ItemRequestController {
     }
 
     @ResponseBody
-    @GetMapping("/requestId")
+    @GetMapping("/{requestId}")
     public ItemRequestDtoWithItems getOneRequest(@RequestHeader(value = "X-Sharer-User-Id") int userId,
                                                  @PathVariable int requestId) {
         return requestService.getOneRequest(userId, requestId);

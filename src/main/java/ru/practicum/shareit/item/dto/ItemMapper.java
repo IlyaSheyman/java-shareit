@@ -49,6 +49,8 @@ public class ItemMapper {
     public ItemDtoForRequests toItemDtoForRequests(Item item) {
         return new ItemDtoForRequests(
                 item.getId(),
+                item.getName(),
+                item.getRequest().getId(),
                 item.getDescription(),
                 item.isAvailable()
         );

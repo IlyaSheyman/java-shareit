@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,10 +20,11 @@ import javax.persistence.Table;
 @Table(name = "requests")
 public class ItemRequest {
 
-    public ItemRequest(int id, String description, User requestor) {
+    public ItemRequest(int id, String description, User requestor, LocalDateTime created) {
         this.id = id;
         this.description = description;
         this.requestor = requestor;
+        this.created = created;
     }
 
     public ItemRequest() {
@@ -36,4 +39,7 @@ public class ItemRequest {
 
     @ManyToOne
     private User requestor;
+
+    @Column(name = "created")
+    private LocalDateTime created;
 }

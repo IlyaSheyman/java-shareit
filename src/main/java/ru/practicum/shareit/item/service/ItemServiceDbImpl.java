@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -75,6 +77,13 @@ public class ItemServiceDbImpl implements ItemService {
 
             if (requestId != null && requestRepository.existsById(requestId)) {
                 item.setRequest(requestRepository.getById(requestId));
+
+                itemRepository.save(item);
+
+                ItemDto dto = itemMapper.toItemDto(item);
+                dto.setRequestId(requestId);
+
+                return dto;
             }
 
             itemRepository.save(item);
@@ -158,9 +167,9 @@ public class ItemServiceDbImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoBookingsComments> getItems(int userId) {
+    public List<ItemDtoBookingsComments> getItems(int userId, int from, int size) {
         List<ItemDtoBookingsComments> itemsDto = new ArrayList<>();
-        for (Item i : itemRepository.findAll()) {
+        for (Item i : itemRepository.findAll(PageRequest.of(from/size, size))) {
             if (i.getOwner().getId() == userId) {
                 ItemDtoBookingsComments itemDto = itemMapper.toItemDtoWithBookings(i);
                 setLastAndNextBookings(i.getId(), itemDto);
@@ -171,19 +180,24 @@ public class ItemServiceDbImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> search(String text) {
-        List<ItemDto> result = new ArrayList<>();
+    public List<ItemDto> search(int userId, String text, int from, int size) {
+        if (userRepository.existsById(userId)) {
+            List<ItemDto> result = new ArrayList<>();
 
-        if (!text.isEmpty()) {
-            for (Item i : itemRepository.findAll()) {
-                if ((i.getName().toLowerCase().contains(text.toLowerCase())
-                        || i.getDescription().toLowerCase().contains(text.toLowerCase()))
-                        && i.isAvailable()) {
-                    result.add(itemMapper.toItemDto(i));
-                }
+            if (!text.isEmpty()) {
+                Page<Item> itemsPage = itemRepository.findAll(PageRequest.of(from/size, size));
+
+                result = itemsPage.getContent().stream()
+                        .filter(i -> (i.getName().toLowerCase().contains(text.toLowerCase())
+                                || i.getDescription().toLowerCase().contains(text.toLowerCase()))
+                                && i.isAvailable())
+                        .map(itemMapper::toItemDto)
+                        .collect(Collectors.toList());
             }
+            return result;
+        } else {
+            throw new NotFoundException("Пользователь с id " + userId + " не найден");
         }
-        return result;
     }
 
     @Override

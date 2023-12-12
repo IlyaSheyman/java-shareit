@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoExtended;
@@ -118,12 +120,11 @@ public class BookingServiceDbImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoExtended> getBookingsByUserId(int userId, String state) {
+    public List<BookingDtoExtended> getBookingsByUserId(int userId, String state, int from, int size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с id " + userId + " не найден");
         } else {
-            List<Booking> bookingsByUserId = getBookingsByStateAndId(state, userId);
-
+            List<Booking> bookingsByUserId = getBookingsByStateAndId(state, userId, from, size);
             List<BookingDtoExtended> bookingsDtoByUserId = new ArrayList<>();
 
             return bookingsByUserId.stream()
@@ -133,32 +134,38 @@ public class BookingServiceDbImpl implements BookingService {
         }
     }
 
-    public List<Booking> getBookingsByStateAndId(String state, int userId) {
+    public List<Booking> getBookingsByStateAndId(String state, int userId, int from, int size) {
         List<Booking> bookings = new ArrayList<>();
+        Pageable pageRequest = PageRequest.of(from/size, size) ;
         switch (state) {
             case ("ALL"):
-                bookings = bookingRepository.findByBooker_Id(userId);
+                bookings = bookingRepository.findByBooker_Id(userId, pageRequest);
                 break;
             case ("CURRENT"):
                 bookings = bookingRepository.findByBooker_IdAndStartIsBeforeAndEndIsAfter(userId,
                         LocalDateTime.now(),
-                        LocalDateTime.now());
+                        LocalDateTime.now(),
+                        pageRequest);
                 break;
             case ("PAST"):
                 bookings = bookingRepository.findByBooker_IdAndEndIsBefore(userId,
-                        LocalDateTime.now());
+                        LocalDateTime.now(),
+                        pageRequest);
                 break;
             case ("FUTURE"):
                 bookings = bookingRepository.findByBooker_IdAndStartIsAfter(userId,
-                        LocalDateTime.now());
+                        LocalDateTime.now(),
+                        pageRequest);
                 break;
             case ("WAITING"):
                 bookings = bookingRepository.findByBooker_IdAndStatusIs(userId,
-                        Status.WAITING);
+                        Status.WAITING,
+                        pageRequest);
                 break;
             case ("REJECTED"):
                 bookings = bookingRepository.findByBooker_IdAndStatusIs(userId,
-                        Status.REJECTED);
+                        Status.REJECTED,
+                        pageRequest);
                 break;
             default:
                 throw new ValidationException("Unknown state: " + state);
@@ -167,11 +174,11 @@ public class BookingServiceDbImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoExtended> getBookingsByItemOwner(int userId, String state) {
+    public List<BookingDtoExtended> getBookingsByItemOwner(int userId, String state, int from, int size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с id " + userId + " не найден");
         } else {
-            List<Booking> bookingsByItemOwner = getBookingsByOwner(state, userId);
+            List<Booking> bookingsByItemOwner = getBookingsByOwner(state, userId, from, size);
 
             List<BookingDtoExtended> bookingsDtoByUserId = new ArrayList<>();
 
@@ -182,7 +189,8 @@ public class BookingServiceDbImpl implements BookingService {
         }
     }
 
-    public List<Booking> getBookingsByOwner(String state, int userId) {
+    public List<Booking> getBookingsByOwner(String state, int userId, int from, int size) {
+        PageRequest pageRequest = PageRequest.of(from/size, size);
         List<Item> items = itemRepository.findByOwner_Id(userId);
         List<Integer> itemIds = items.stream()
                 .map(Item::getId)
@@ -192,38 +200,43 @@ public class BookingServiceDbImpl implements BookingService {
         switch (state) {
             case ("ALL"):
                 for (Integer i : itemIds) {
-                    bookings.addAll(bookingRepository.findByItem_Id(i));
+                    bookings.addAll(bookingRepository.findByItem_Id(i, pageRequest));
                 }
                 break;
             case ("CURRENT"):
                 for (Integer i : itemIds) {
                     bookings.addAll(bookingRepository.findByItem_IdAndStartIsBeforeAndEndIsAfter(i,
                             LocalDateTime.now(),
-                            LocalDateTime.now()));
+                            LocalDateTime.now(),
+                            pageRequest));
                 }
                 break;
             case ("PAST"):
                 for (Integer i : itemIds) {
                     bookings.addAll(bookingRepository.findByItem_IdAndEndIsBefore(i,
-                            LocalDateTime.now()));
+                            LocalDateTime.now(),
+                            pageRequest));
                 }
                 break;
             case ("FUTURE"):
                 for (Integer i : itemIds) {
                     bookings.addAll(bookingRepository.findByItem_IdAndStartIsAfter(i,
-                            LocalDateTime.now()));
+                            LocalDateTime.now(),
+                            pageRequest));
                 }
                 break;
             case ("WAITING"):
                 for (Integer i : itemIds) {
                     bookings.addAll(bookingRepository.findByItem_IdAndStatusIs(i,
-                            Status.WAITING));
+                            Status.WAITING,
+                            pageRequest));
                 }
                 break;
             case ("REJECTED"):
                 for (Integer i : itemIds) {
                     bookings.addAll(bookingRepository.findByItem_IdAndStatusIs(i,
-                            Status.REJECTED));
+                            Status.REJECTED,
+                            pageRequest));
                 }
                 break;
             default:

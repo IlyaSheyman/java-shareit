@@ -2,7 +2,6 @@ package ru.practicum.shareit.request.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
@@ -15,6 +14,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.storage.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,8 +51,10 @@ public class ItemRequestServiceDbImpl implements ItemRequestService {
         } else {
             ItemRequest request = requestMapper.fromRequestDto(itemRequestDto);
             request.setRequestor(userRepository.getById(userId));
+            request.setCreated(LocalDateTime.now());
 
             requestRepository.save(request);
+
             ItemRequestDto requestDto = requestMapper.toRequestDto(
                     requestRepository.findByRequestor_IdAndDescription(
                             userId,
@@ -67,8 +69,6 @@ public class ItemRequestServiceDbImpl implements ItemRequestService {
     public List<ItemRequestDtoWithItems> getRequests(int userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с id " + userId + " не найден");
-        } else if (requestRepository.findByRequestor_Id(userId).isEmpty()) {
-            throw new NotFoundException("У этого пользователя нет запросов");
         } else {
             List<ItemRequestDtoWithItems> itemRequests = new ArrayList<>();
 
@@ -95,7 +95,7 @@ public class ItemRequestServiceDbImpl implements ItemRequestService {
         } else {
             List<ItemRequestDtoWithItems> allRequests = new ArrayList<>();
 
-            for (ItemRequest req : requestRepository.findAll(PageRequest.of(from, size))) {
+            for (ItemRequest req : requestRepository.findByRequestor_IdNot(userId, PageRequest.of(from/size, size))) {
                 ItemRequestDtoWithItems requestDtoWithItems = requestMapper.toRequestDtoWithItems(req);
                 requestDtoWithItems.setItems(
                         itemRepository.findByRequest_Id(req.getId())
