@@ -48,11 +48,10 @@ public class ItemServiceDbImplTest {
     void testAddItemSuccess() {
         int userId = 1;
 
-        ItemDto itemDto = ItemDto.builder()
-                .name("Test item")
-                .description("Test description")
-                .available(Optional.of(true))
-                .build();
+        ItemDto itemDto = new ItemDto();
+        itemDto.setName("Test item");
+        itemDto.setDescription("Test description");
+        itemDto.setAvailable(Optional.of(true));
 
         User mockUser = User.builder().id(userId).name("Test user").email("testemail@gmail.com").build();
 
