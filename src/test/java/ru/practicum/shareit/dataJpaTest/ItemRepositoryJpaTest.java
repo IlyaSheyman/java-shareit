@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DisplayName("Тесты для itemRepository")
 public class ItemRepositoryJpaTest {
 
     @Autowired

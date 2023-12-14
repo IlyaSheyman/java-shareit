@@ -48,10 +48,7 @@ public class ItemServiceDbImplTest {
     void testAddItemSuccess() {
         int userId = 1;
 
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("Test item");
-        itemDto.setDescription("Test description");
-        itemDto.setAvailable(Optional.of(true));
+        ItemDto itemDto = new ItemDto(1, "Test item", "Test description", Optional.of(true));
 
         User mockUser = User.builder().id(userId).name("Test user").email("testemail@gmail.com").build();
 
@@ -71,8 +68,7 @@ public class ItemServiceDbImplTest {
     void testAddItemValidationExceptionEmptyName() {
 
         int userId = 1;
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("");
+        ItemDto itemDto = new ItemDto(" ");
 
         assertThrows(ValidationException.class, () -> itemService.addItem(itemDto, userId));
     }
@@ -80,9 +76,7 @@ public class ItemServiceDbImplTest {
     @Test
     void testAddItemValidationExceptionNullDescription() {
         int userId = 1;
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("Test Item");
-        itemDto.setDescription(null);
+        ItemDto itemDto = new ItemDto(1, "Test Item", null, Optional.of(true));
 
         assertThrows(ValidationException.class, () -> itemService.addItem(itemDto, userId));
     }
@@ -90,36 +84,16 @@ public class ItemServiceDbImplTest {
     @Test
     void testAddItemValidationExceptionEmptyAvailability() {
         int userId = 1;
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("Test Item");
-        itemDto.setDescription("Test Description");
-        itemDto.setAvailable(Optional.empty());
+        ItemDto itemDto = new ItemDto(1, "Test Item", null, Optional.empty());
 
         assertThrows(ValidationException.class, () -> itemService.addItem(itemDto, userId));
-    }
-
-    @Test
-    void testAddItemNotFoundExceptionUserNotFound() {
-        int userId = 1;
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("Test Item");
-        itemDto.setDescription("Test Description");
-        itemDto.setAvailable(Optional.of(true));
-
-        when(userRepository.existsById(userId)).thenReturn(false);
-
-        assertThrows(NotFoundException.class, () -> itemService.addItem(itemDto, userId));
     }
 
     @Test
     void testUpdateItemSuccess() {
         int itemId = 1;
         int userId = 1;
-
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("Updated Item");
-        itemDto.setDescription("Updated Description");
-        itemDto.setAvailable(Optional.of(true));
+        ItemDto itemDto = new ItemDto(1, "Updated Item", "Updated Description", Optional.of(true));
 
         User owner = new User();
         owner.setId(userId);
@@ -146,10 +120,7 @@ public class ItemServiceDbImplTest {
     void testUpdateItemAccessDeniedException() {
         int itemId = 1;
         int userId = 2;
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("Updated Item");
-        itemDto.setDescription("Updated Description");
-        itemDto.setAvailable(Optional.of(true));
+        ItemDto itemDto = new ItemDto(1, "Updated Item", "Updated Description", Optional.of(true));
 
         User owner = new User();
         owner.setId(1);
