@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
@@ -34,6 +35,7 @@ public class UserServiceDbImpl implements UserService {
         this.itemService = itemServiceDb;
     }
 
+    @Transactional
     @Override
     public UserDto addUser(User user) {
         if (user.getEmail() != null) {
@@ -44,6 +46,7 @@ public class UserServiceDbImpl implements UserService {
         return userMapper.toUserDto(user);
     }
 
+    @Transactional
     @Override
     public UserDto updateUser(int id, User user) {
         if (userRepository.getById(id) != null) {
@@ -105,6 +108,7 @@ public class UserServiceDbImpl implements UserService {
         return usersDto;
     }
 
+    @Transactional
     @Override
     public UserDto delete(int id) {
         for (Item item: itemRepository.findAll()) {

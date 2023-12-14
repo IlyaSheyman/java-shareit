@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.user.model.User;
@@ -11,10 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
 @Setter
 @Entity
 @Table(name = "requests")

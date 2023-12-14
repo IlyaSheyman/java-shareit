@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoExtended;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -41,6 +42,7 @@ public class BookingServiceDbImpl implements BookingService {
         this.itemRepository = itemRepository;
     }
 
+    @Transactional
     @Override
     public BookingDtoExtended addBooking(BookingDto bookingDto, int userId) {
         int itemId = bookingDto.getItemId();
@@ -74,6 +76,7 @@ public class BookingServiceDbImpl implements BookingService {
         }
     }
 
+    @Transactional
     @Override
     public BookingDtoExtended approveBooking(int bookingId, int userId, boolean isApproved) {
         if (!userRepository.existsById(userId)) {

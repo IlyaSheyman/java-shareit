@@ -1,8 +1,8 @@
 package ru.practicum.shareit.user.model;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
-@Data
 @Entity
 @Table(name="users")
 @Builder
+@Getter
+@Setter
 public class User {
 
     public User(int id, String email, String name) {

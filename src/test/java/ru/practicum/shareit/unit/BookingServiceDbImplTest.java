@@ -1,5 +1,6 @@
 package ru.practicum.shareit.unit;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,6 +40,7 @@ class BookingServiceDbImplTest {
     private BookingServiceDbImpl bookingService;
 
     @Test
+    @DisplayName("Юнит-тест успешного создания объекта Booking")
     public void testAddBookingSuccess() {
         int userId = 1;
         int bookerId = 2;
@@ -84,6 +86,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест исключения при создании booking: пользователь не найден")
     public void testAddBookingUserNotFound() {
         int userId = 1;
         int itemId = 2;
@@ -99,6 +102,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест исключения при создании booking: вещь не найдена")
     public void testAddBookingItemNotFound() {
         int userId = 1;
         int itemId = 2;
@@ -115,6 +119,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест исключения при создании booking: некорректные даты")
     public void testAddBookingInvalidDates() {
         int userId = 1;
         int itemId = 2;
@@ -131,6 +136,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест исключения при создании booking: некорректные даты")
     public void testAddBookingSameStartAndEndDate() {
         int userId = 1;
         int itemId = 2;
@@ -148,6 +154,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест исключения при создании booking: некорректные даты")
     public void testAddBookingEndDateBeforeStartDate() {
         int userId = 1;
         int itemId = 2;
@@ -166,6 +173,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест исключения при создании booking: вещь недоступна")
     public void testAddBookingItemNotAvailable() {
         int userId = 1;
         int itemId = 2;
@@ -183,6 +191,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест исключения при создании booking: владелец вещи пытается создать бронирование")
     public void testAddBookingOwnerTryingToBookOwnItem() {
         int userId = 1;
         int itemId = 2;
@@ -203,6 +212,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест исключения при подтверждении booking: пользователь не найден")
     public void testApproveBookingUserNotFound() {
         int userId = 1;
         int bookingId = 2;
@@ -214,6 +224,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест исключения при подтверждении booking: бронирование не найдено")
     public void testApproveBookingBookingNotFound() {
         int userId = 1;
         int bookingId = 2;
@@ -226,6 +237,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест для успешного подтверждения бронирования")
     public void testApproveBookingOwnerApproving() {
         int userId = 1;
         int bookingId = 2;
@@ -250,6 +262,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест для успешного отказа от бронирования")
     public void testApproveBookingOwnerRejecting() {
         int userId = 1;
         int bookingId = 2;
@@ -274,6 +287,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест для исключения при бронировании Booking: другой владелец пытается подтвердить")
     public void testApproveBookingNonOwnerTryingToApprove() {
         int userId = 1;
         int bookingId = 2;
@@ -282,7 +296,7 @@ class BookingServiceDbImplTest {
         Booking booking = Booking.builder()
                 .id(bookingId)
                 .status(Status.WAITING)
-                .item(Item.builder().owner(User.builder().id(3).build()).build())  // Different owner
+                .item(Item.builder().owner(User.builder().id(3).build()).build())
                 .build();
 
         when(userRepository.existsById(userId)).thenReturn(true);
@@ -293,6 +307,7 @@ class BookingServiceDbImplTest {
     }
 
     @Test
+    @DisplayName("Юнит-тест для исключения при бронировании Booking: другой владелец пытается подтвердить")
     public void testApproveBookingAlreadyApproved() {
         int userId = 1;
         int bookingId = 2;

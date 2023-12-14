@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -43,6 +44,7 @@ public class ItemRequestServiceDbImpl implements ItemRequestService {
         this.itemMapper = new ItemMapper();
     }
 
+    @Transactional
     @Override
     public ItemRequestDto addItemRequest(ItemRequestDto itemRequestDto, int userId) {
         if (!userRepository.existsById(userId)) {

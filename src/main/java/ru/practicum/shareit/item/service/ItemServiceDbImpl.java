@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
@@ -59,6 +60,7 @@ public class ItemServiceDbImpl implements ItemService {
         this.requestRepository = requestRepository;
     }
 
+    @Transactional
     @Override
     public ItemDto addItem(ItemDto itemDto, int userId) {
         if (itemDto.getName().isEmpty()) {
@@ -92,6 +94,7 @@ public class ItemServiceDbImpl implements ItemService {
         }
     }
 
+    @Transactional
     @Override
     public ItemDto updateItem(int id, ItemDto item, int userId) {
         if (itemRepository.getById(id).getOwner().getId() == userId) {
@@ -115,7 +118,6 @@ public class ItemServiceDbImpl implements ItemService {
             throw new AccessToItemDeniedException("Изменять вещь может только владелец");
         }
     }
-
 
     @Override
     public ItemDtoBookingsComments getItem(int id, int userId) {
@@ -200,6 +202,7 @@ public class ItemServiceDbImpl implements ItemService {
         }
     }
 
+    @Transactional
     @Override
     public ItemDto deleteItem(int id, int userId) {
         Item itemToDelete = itemRepository.getById(id);
@@ -211,6 +214,7 @@ public class ItemServiceDbImpl implements ItemService {
         return itemMapper.toItemDto(itemToDelete);
     }
 
+    @Transactional
     @Override
     public CommentDto addComment(int userId, int itemId, CommentDtoTextOnly comment) {
         Item item = itemRepository.getById(itemId);

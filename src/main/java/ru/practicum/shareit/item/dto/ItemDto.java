@@ -1,10 +1,14 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Optional;
 
 @Data
+@Builder
+@NoArgsConstructor
 public class ItemDto {
     private int id;
     private String name;
