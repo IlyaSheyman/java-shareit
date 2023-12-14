@@ -48,7 +48,7 @@ public class ItemServiceDbImplTest {
     void testAddItemSuccess() {
         int userId = 1;
 
-        ItemDto itemDto = new ItemDto(1, "Test item", "Test description", Optional.of(true));
+        ItemDto itemDto = new ItemDto(1, "Test item", "Test description", Optional.of(true), 0);
 
         User mockUser = User.builder().id(userId).name("Test user").email("testemail@gmail.com").build();
 
@@ -68,7 +68,8 @@ public class ItemServiceDbImplTest {
     void testAddItemValidationExceptionEmptyName() {
 
         int userId = 1;
-        ItemDto itemDto = new ItemDto(" ");
+        ItemDto itemDto = new ItemDto(1, "", "Updated Description", Optional.of(true), 0);
+
 
         assertThrows(ValidationException.class, () -> itemService.addItem(itemDto, userId));
     }
@@ -76,7 +77,7 @@ public class ItemServiceDbImplTest {
     @Test
     void testAddItemValidationExceptionNullDescription() {
         int userId = 1;
-        ItemDto itemDto = new ItemDto(1, "Test Item", null, Optional.of(true));
+        ItemDto itemDto = new ItemDto(1, "Test Item", null, Optional.of(true), 0);
 
         assertThrows(ValidationException.class, () -> itemService.addItem(itemDto, userId));
     }
@@ -84,7 +85,7 @@ public class ItemServiceDbImplTest {
     @Test
     void testAddItemValidationExceptionEmptyAvailability() {
         int userId = 1;
-        ItemDto itemDto = new ItemDto(1, "Test Item", null, Optional.empty());
+        ItemDto itemDto = new ItemDto(1, "Test Item", null, Optional.empty(), 0);
 
         assertThrows(ValidationException.class, () -> itemService.addItem(itemDto, userId));
     }
@@ -93,7 +94,7 @@ public class ItemServiceDbImplTest {
     void testUpdateItemSuccess() {
         int itemId = 1;
         int userId = 1;
-        ItemDto itemDto = new ItemDto(1, "Updated Item", "Updated Description", Optional.of(true));
+        ItemDto itemDto = new ItemDto(1, "Updated Item", "Updated Description", Optional.of(true), 0);
 
         User owner = new User();
         owner.setId(userId);
@@ -120,7 +121,7 @@ public class ItemServiceDbImplTest {
     void testUpdateItemAccessDeniedException() {
         int itemId = 1;
         int userId = 2;
-        ItemDto itemDto = new ItemDto(1, "Updated Item", "Updated Description", Optional.of(true));
+        ItemDto itemDto = new ItemDto(1, "Updated Item", "Updated Description", Optional.of(true), 0);
 
         User owner = new User();
         owner.setId(1);

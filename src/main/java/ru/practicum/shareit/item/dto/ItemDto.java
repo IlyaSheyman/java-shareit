@@ -21,15 +21,4 @@ public class ItemDto {
         this.available = available;
         this.requestId = requestId;
     }
-
-    public ItemDto(int id, String name, String description, Optional<Boolean> available) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-    }
-
-    public ItemDto(String name) {
-        this.name = name;
-    }
 }
