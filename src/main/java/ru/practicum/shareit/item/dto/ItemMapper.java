@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.Optional;
@@ -15,7 +15,7 @@ public class ItemMapper {
                 itemDto.getDescription(),
                 itemDto.getAvailable().get(),
                 user,
-                new ItemRequest()
+                null
         );
     }
 
@@ -30,7 +30,7 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 Optional.of(item.isAvailable()),
-                0
+                null
         );
     }
 
@@ -40,9 +40,19 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 Optional.of(item.isAvailable()),
-                0,
+                null,
                 null,
                 null
+        );
+    }
+
+    public ItemDtoForRequests toItemDtoForRequests(Item item) {
+        return new ItemDtoForRequests(
+                item.getId(),
+                item.getName(),
+                item.getRequest().getId(),
+                item.getDescription(),
+                item.isAvailable()
         );
     }
 }

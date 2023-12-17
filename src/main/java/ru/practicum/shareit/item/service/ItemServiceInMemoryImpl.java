@@ -49,7 +49,7 @@ public class ItemServiceInMemoryImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoBookingsComments> getItems(int userId) {
+    public List<ItemDtoBookingsComments> getItems(int userId, int from, int size) {
         List<ItemDtoBookingsComments> itemsDto = new ArrayList<>();
         for (Item i : itemStorage.getAll(userId)) {
             itemsDto.add(itemMapper.toItemDtoWithBookings(i));
@@ -58,7 +58,7 @@ public class ItemServiceInMemoryImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> search(String text) {
+    public List<ItemDto> search(int userId, String text, int from, int size) {
         List<ItemDto> itemsDto = new ArrayList<>();
         for (Item i : itemStorage.search(text)) {
             itemsDto.add(itemMapper.toItemDto(i));

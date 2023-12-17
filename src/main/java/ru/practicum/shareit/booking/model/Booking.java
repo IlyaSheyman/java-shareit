@@ -1,7 +1,10 @@
 package ru.practicum.shareit.booking.model;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -16,11 +19,22 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @NoArgsConstructor
 @Table(name = "bookings")
+@Builder
+@Getter
+@Setter
 public class Booking {
+
+    public Booking(int id, LocalDateTime start, LocalDateTime end, Item item, User booker, Status status) {
+        this.id = id;
+        this.start = start;
+        this.end = end;
+        this.item = item;
+        this.booker = booker;
+        this.status = status;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

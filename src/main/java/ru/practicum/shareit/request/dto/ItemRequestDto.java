@@ -8,8 +8,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
@@ -18,4 +16,10 @@ public class ItemRequestDto {
     private int id;
     private String description;
     private LocalDateTime created;
+
+    public ItemRequestDto(int id, String description, LocalDateTime created) {
+        this.id = id;
+        this.description = description;
+        this.created = created;
+    }
 }

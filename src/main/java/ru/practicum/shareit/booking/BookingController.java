@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +18,13 @@ import ru.practicum.shareit.booking.dto.BookingDtoExtended;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping(path = "/bookings")
+@Validated
 public class BookingController {
 
     private BookingService bookingService;
@@ -60,18 +63,22 @@ public class BookingController {
     @ResponseBody
     @GetMapping
     public List<BookingDtoExtended> getBookingByUserId(@RequestHeader(value = "X-Sharer-User-Id") int userId,
-                                               @RequestParam(defaultValue = "ALL") String state) {
+                                                       @RequestParam(defaultValue = "ALL") String state,
+                                                       @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
+                                                       @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
         log.info("Получен запрос на получение списка всех бронирований текущего пользователя");
 
-        return bookingService.getBookingsByUserId(userId, state);
+        return bookingService.getBookingsByUserId(userId, state, from, size);
     }
 
     @ResponseBody
     @GetMapping("/owner")
     public List<BookingDtoExtended> getBookingsForAllItems(@RequestHeader(value = "X-Sharer-User-Id") int userId,
-                                                              @RequestParam(defaultValue = "ALL") String state) {
+                                                           @RequestParam(defaultValue = "ALL") String state,
+                                                           @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
+                                                           @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
         log.info("Получен запрос на получение списка бронирований для всех вещей текущего пользователя");
 
-        return bookingService.getBookingsByItemOwner(userId, state);
+        return bookingService.getBookingsByItemOwner(userId, state, from, size);
     }
 }

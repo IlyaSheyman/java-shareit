@@ -1,7 +1,9 @@
 package ru.practicum.shareit.request.dto;
 
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
+
+import java.util.ArrayList;
 
 public class ItemRequestMapper {
 
@@ -9,16 +11,25 @@ public class ItemRequestMapper {
         return new ItemRequest(
                 requestDto.getId(),
                 requestDto.getDescription(),
-                new User()
+                new User(),
+                requestDto.getCreated()
         );
     }
-//    public ItemDto toItemDto(Item item) {
-//        return new ItemDto(
-//                item.getId(),
-//                item.getName(),
-//                item.getDescription(),
-//                Optional.of(item.isAvailable()),
-//                item.getRequest() != null ? item.getRequest().getId() : null
-//        );
-//    }
+
+    public ItemRequestDto toRequestDto(ItemRequest request) {
+        return new ItemRequestDto(
+                request.getId(),
+                request.getDescription(),
+                request.getCreated()
+        );
+    }
+
+    public ItemRequestDtoWithItems toRequestDtoWithItems(ItemRequest request) {
+        return new ItemRequestDtoWithItems(
+                request.getId(),
+                request.getDescription(),
+                request.getCreated(),
+                new ArrayList<>()
+        );
+    }
 }

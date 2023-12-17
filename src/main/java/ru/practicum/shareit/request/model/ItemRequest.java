@@ -1,9 +1,8 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.Column;
@@ -13,19 +12,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Builder
+@Setter
 @Entity
 @Table(name = "requests")
-@NoArgsConstructor
-@RequiredArgsConstructor
-@AllArgsConstructor
 public class ItemRequest {
 
-    public ItemRequest(int id, String description, User requestor) {
+    public ItemRequest(int id, String description, User requestor, LocalDateTime created) {
         this.id = id;
         this.description = description;
         this.requestor = requestor;
+        this.created = created;
+    }
+
+    public ItemRequest() {
     }
 
     @Id
@@ -37,4 +40,7 @@ public class ItemRequest {
 
     @ManyToOne
     private User requestor;
+
+    @Column(name = "created")
+    private LocalDateTime created;
 }
