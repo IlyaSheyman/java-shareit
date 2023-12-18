@@ -2,7 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,59 +12,56 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.dto.UserRequestDto;
 
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.PositiveOrZero;
 
 @Slf4j
 @RequestMapping(path = "/users")
 @RestController
 public class UserController {
 
-    @Autowired
-    @Qualifier("UserServiceDbImpl")
-    private final UserService userService;
+    private final UserClient userClient;
 
     @Autowired
-    public UserController(@Qualifier("UserServiceDbImpl") UserService userService) {
-        this.userService = userService;
+    public UserController(UserClient userClient) {
+        this.userClient = userClient;
     }
 
     @ResponseBody
     @PostMapping
-    public UserDto addUser(@RequestBody User user) {
+    public ResponseEntity<Object> addUser(@RequestBody @Valid UserRequestDto user) {
         log.info("Получен запрос на добавление пользователя.");
-        return userService.addUser(user);
+        return userClient.addUser(user);
     }
 
     @ResponseBody
     @PatchMapping("/{id}")
-    public UserDto updateUsers(@RequestBody User user, @PathVariable int id) {
+    public ResponseEntity<Object> updateUsers(@RequestBody UserRequestDto user, @PathVariable @PositiveOrZero int id) {
         log.info("Получен запрос на обновление пользователя с ID - {}.", id);
-        return userService.updateUser(id, user);
+        return userClient.updateUser(id, user);
     }
 
     @ResponseBody
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable int id) {
+    public ResponseEntity<Object> getUserById(@PathVariable @PositiveOrZero int id) {
         log.info("Получен запрос на получение пользователя с ID - {}.", id);
-        return userService.getUser(id);
+        return userClient.getUser(id);
     }
 
     @ResponseBody
     @DeleteMapping("/{id}")
-    public UserDto deleteUser(@PathVariable int id) {
+    public ResponseEntity<Object> deleteUser(@PathVariable @PositiveOrZero int id) {
         log.info("Получен запрос на удаление пользователя с ID - {}.", id);
-        return userService.delete(id);
+        return userClient.delete(id);
     }
 
     @ResponseBody
     @GetMapping
-    public List<UserDto> getUsers() {
+    public ResponseEntity<Object> getUsers() {
         log.info("Получен запрос на получение всех пользователей");
-        return userService.getUsers();
+        return userClient.getUsers();
     }
 
 }

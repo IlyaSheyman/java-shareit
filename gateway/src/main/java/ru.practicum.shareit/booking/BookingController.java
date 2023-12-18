@@ -28,8 +28,8 @@ public class BookingController {
 
     private BookingClient bookingClient;
 
-    public BookingController(@Qualifier("BookingServiceDbImpl") BookingClient bookingService) {
-        this.bookingClient = bookingService;
+    public BookingController(BookingClient bookingClient) {
+        this.bookingClient = bookingClient;
     }
 
     @ResponseBody

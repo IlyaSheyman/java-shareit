@@ -30,8 +30,8 @@ public class ItemController {
 
     private final ItemClient itemClient;
 
-    public ItemController(@Qualifier("ItemServiceDbImpl") ItemClient itemService) {
-        this.itemClient = itemService;
+    public ItemController(ItemClient itemClient) {
+        this.itemClient = itemClient;
     }
 
     @ResponseBody

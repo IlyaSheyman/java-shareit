@@ -12,35 +12,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.dto.ItemRequestDtoWithItems;
-import ru.practicum.shareit.request.service.ItemRequestService;
-
-import java.util.List;
+import ru.practicum.shareit.request.dto.RequestRequestDto;
 
 @RestController
 @Slf4j
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
 
-    ItemRequestService requestService;
+    ItemRequestClient requestClient;
 
-    public ItemRequestController(@Qualifier("ItemRequestServiceDbImpl") ItemRequestService itemRequestService) {
-        this.requestService = itemRequestService;
+    public ItemRequestController(ItemRequestClient requestClient) {
+        this.requestClient = requestClient;
     }
 
     @ResponseBody
     @PostMapping
-    public ResponseEntity<Object> addItemRequest(@RequestBody ItemRequestDto request,
+    public ResponseEntity<Object> addItemRequest(@RequestBody RequestRequestDto request,
                                                  @RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получен запрос на добавление запроса на вещь.");
-        return requestService.addItemRequest(request, userId);
+        return requestClient.addItemRequest(request, userId);
     }
 
     @ResponseBody
     @GetMapping
     public ResponseEntity<Object> getRequestsByRequestor(@RequestHeader(value = "X-Sharer-User-Id") int userId) {
-        return requestService.getRequests(userId);
+        return requestClient.getRequests(userId);
     }
 
     @ResponseBody
@@ -48,13 +44,13 @@ public class ItemRequestController {
     public ResponseEntity<Object> getAllRequests(@RequestHeader(value = "X-Sharer-User-Id") int userId,
                                                         @RequestParam(value = "from") int from,
                                                         @RequestParam(value = "size") int size) {
-        return requestService.getAllRequests(userId, from, size);
+        return requestClient.getAllRequests(userId, from, size);
     }
 
     @ResponseBody
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getOneRequest(@RequestHeader(value = "X-Sharer-User-Id") int userId,
                                                  @PathVariable int requestId) {
-        return requestService.getOneRequest(userId, requestId);
+        return requestClient.getOneRequest(userId, requestId);
     }
 }
