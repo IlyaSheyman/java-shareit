@@ -33,7 +33,7 @@ public class BookingClient extends BaseClient {
 
     //NEW
     public ResponseEntity<Object> approveBooking(int bookingId, int userId, boolean approved) {
-        return patch("/" + bookingId, userId, approved);
+        return patch("/" + bookingId + "?approved={approved}", userId, Map.of("approved", approved));
     }
 
     //NEW
@@ -53,7 +53,7 @@ public class BookingClient extends BaseClient {
                 "from", from,
                 "size", size
         );
-        return get("?state={state}&from={from}&size={size}", userId, parameters);
+        return get("/owner?state={state}&from={from}&size={size}", userId, parameters);
     }
 
     //NEW

@@ -2,19 +2,20 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.util.Optional;
 
 @Data
 public class ItemRequestDto {
-    @NotEmpty
+    @Size(min = 2, message = "Name must not be empty")
     private String name;
-    @NotEmpty
+
+    @Size(min = 3, message = "Description must not be empty")
     private String description;
-    @NotNull
+
     private Optional<Boolean> available;
+
     @PositiveOrZero
     private Integer requestId;
 }

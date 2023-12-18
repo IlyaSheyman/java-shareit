@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
 
 @RestController
@@ -63,8 +61,8 @@ public class BookingController {
     @GetMapping
     public ResponseEntity<Object> getBookingByUserId(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
                                                        @RequestParam(defaultValue = "ALL") String state,
-                                                       @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                                       @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
+                                                       @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero int from,
+                                                       @RequestParam(value = "size", defaultValue = "20") @PositiveOrZero int size) {
         log.info("Получен запрос на получение списка всех бронирований текущего пользователя");
 
         return bookingClient.getBookingsByUserId(userId, state, from, size);
@@ -74,8 +72,8 @@ public class BookingController {
     @GetMapping("/owner")
     public ResponseEntity<Object> getBookingsForAllItems(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
                                                            @RequestParam(defaultValue = "ALL") String state,
-                                                           @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                                           @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
+                                                           @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero int from,
+                                                           @RequestParam(value = "size", defaultValue = "20") @PositiveOrZero int size) {
         log.info("Получен запрос на получение списка бронирований для всех вещей текущего пользователя");
 
         return bookingClient.getBookingsForAllItems(userId, state, from, size);

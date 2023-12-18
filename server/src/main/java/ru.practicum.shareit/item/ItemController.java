@@ -59,8 +59,8 @@ public class ItemController {
     @ResponseBody
     @GetMapping
     public List<ItemDtoBookingsComments> getItems(@RequestHeader("X-Sharer-User-Id") int userId,
-                                                  @RequestParam(value = "from", defaultValue = "0") Integer from,
-                                                  @RequestParam(value = "size", defaultValue = "20") Integer size) {
+                                                  @RequestParam(value = "from") Integer from,
+                                                  @RequestParam(value = "size") Integer size) {
         return itemService.getItems(userId, from, size);
     }
 
@@ -68,8 +68,8 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemDto> search(@RequestHeader(value = "X-Sharer-User-Id", required = false) int userId,
                                 @RequestParam String text,
-                                @RequestParam(value = "from", defaultValue = "0") int from,
-                                @RequestParam(value = "size", defaultValue = "20") int size) {
+                                @RequestParam(value = "from") int from,
+                                @RequestParam(value = "size") int size) {
         return itemService.search(userId, text, from, size);
     }
 

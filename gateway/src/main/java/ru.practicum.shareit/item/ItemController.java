@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.item.comment.dto.CommentDtoTextOnly;
 import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 
@@ -62,8 +60,8 @@ public class ItemController {
     @ResponseBody
     @GetMapping
     public ResponseEntity<Object> getItems(@RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId,
-                                                  @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
-                                                  @RequestParam(value = "size", defaultValue = "20") @Min(0) Integer size) {
+                                                  @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                  @RequestParam(value = "size", defaultValue = "20") @PositiveOrZero Integer size) {
         return itemClient.getItems(userId, from, size);
     }
 
@@ -71,8 +69,8 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestHeader(value = "X-Sharer-User-Id", required = false) @PositiveOrZero int userId,
                                 @RequestParam String text,
-                                @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
+                                @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero int from,
+                                @RequestParam(value = "size", defaultValue = "20") @PositiveOrZero int size) {
         return itemClient.search(userId, text, from, size);
     }
 
