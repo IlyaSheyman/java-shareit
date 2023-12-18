@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,13 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingDtoExtended;
-import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.List;
+import javax.validation.constraints.PositiveOrZero;
 
 @RestController
 @Slf4j
@@ -27,58 +26,58 @@ import java.util.List;
 @Validated
 public class BookingController {
 
-    private BookingService bookingService;
+    private BookingClient bookingClient;
 
-    public BookingController(@Qualifier("BookingServiceDbImpl") BookingService bookingService) {
-        this.bookingService = bookingService;
+    public BookingController(@Qualifier("BookingServiceDbImpl") BookingClient bookingService) {
+        this.bookingClient = bookingService;
     }
 
     @ResponseBody
     @PostMapping
-    public BookingDtoExtended addBooking(@Valid @RequestBody BookingDto bookingDto,
-                                         @RequestHeader("X-Sharer-User-Id") int userId) {
+    public ResponseEntity<Object> addBooking(@Valid @RequestBody BookItemRequestDto bookingDto,
+                                             @RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId) {
         log.info("Получен запрос на создание нового бронирования.");
 
-        return bookingService.addBooking(bookingDto, userId);
+        return bookingClient.addBooking(userId, bookingDto);
     }
 
     @ResponseBody
     @PatchMapping("/{bookingId}")
-    public BookingDtoExtended approveBooking(@RequestHeader(value = "X-Sharer-User-Id") int userId,
-                                             @PathVariable int bookingId,
+    public ResponseEntity<Object> approveBooking(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
+                                             @PathVariable @PositiveOrZero int bookingId,
                                              @RequestParam boolean approved) {
         log.info("Получен запрос на обновление статуса бронирования");
-        return bookingService.approveBooking(bookingId, userId, approved);
+        return bookingClient.approveBooking(bookingId, userId, approved);
     }
 
     @ResponseBody
     @GetMapping("/{bookingId}")
-    public BookingDtoExtended getBooking(@RequestHeader(value = "X-Sharer-User-Id") int userId,
-                                         @PathVariable int bookingId) {
+    public ResponseEntity<Object> getBooking(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
+                                         @PathVariable @PositiveOrZero int bookingId) {
         log.info("Получен запрос на получение информации о бронировании");
 
-        return bookingService.getBooking(userId, bookingId);
+        return bookingClient.getBooking(userId, bookingId);
     }
 
     @ResponseBody
     @GetMapping
-    public List<BookingDtoExtended> getBookingByUserId(@RequestHeader(value = "X-Sharer-User-Id") int userId,
+    public ResponseEntity<Object> getBookingByUserId(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
                                                        @RequestParam(defaultValue = "ALL") String state,
                                                        @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
                                                        @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
         log.info("Получен запрос на получение списка всех бронирований текущего пользователя");
 
-        return bookingService.getBookingsByUserId(userId, state, from, size);
+        return bookingClient.getBookingsByUserId(userId, state, from, size);
     }
 
     @ResponseBody
     @GetMapping("/owner")
-    public List<BookingDtoExtended> getBookingsForAllItems(@RequestHeader(value = "X-Sharer-User-Id") int userId,
+    public ResponseEntity<Object> getBookingsForAllItems(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
                                                            @RequestParam(defaultValue = "ALL") String state,
                                                            @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
                                                            @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
         log.info("Получен запрос на получение списка бронирований для всех вещей текущего пользователя");
 
-        return bookingService.getBookingsByItemOwner(userId, state, from, size);
+        return bookingClient.getBookingsForAllItems(userId, state, from, size);
     }
 }

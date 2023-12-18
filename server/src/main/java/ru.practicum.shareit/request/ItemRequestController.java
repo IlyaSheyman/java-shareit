@@ -2,7 +2,6 @@ package ru.practicum.shareit.request;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,14 +15,11 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDtoWithItems;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping(path = "/requests")
-@Validated
 public class ItemRequestController {
 
     ItemRequestService requestService;
@@ -34,7 +30,7 @@ public class ItemRequestController {
 
     @ResponseBody
     @PostMapping
-    public ItemRequestDto addItemRequest(@Valid @RequestBody ItemRequestDto request,
+    public ItemRequestDto addItemRequest(@RequestBody ItemRequestDto request,
                                   @RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получен запрос на добавление запроса на вещь.");
         return requestService.addItemRequest(request, userId);
@@ -49,8 +45,8 @@ public class ItemRequestController {
     @ResponseBody
     @GetMapping("/all")
     public List<ItemRequestDtoWithItems> getAllRequests(@RequestHeader(value = "X-Sharer-User-Id") int userId,
-                                                        @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                                        @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
+                                                        @RequestParam(value = "from") int from,
+                                                        @RequestParam(value = "size") int size) {
         return requestService.getAllRequests(userId, from, size);
     }
 

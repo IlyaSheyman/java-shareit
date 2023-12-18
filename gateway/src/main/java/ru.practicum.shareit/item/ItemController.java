@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,15 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.dto.CommentDtoTextOnly;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoBookingsComments;
-import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.item.dto.CommentRequestDto;
+import ru.practicum.shareit.item.dto.ItemRequestDto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.List;
+import javax.validation.constraints.PositiveOrZero;
 
 @Slf4j
 @RestController
@@ -29,59 +28,59 @@ import java.util.List;
 @Validated
 public class ItemController {
 
-    private final ItemService itemService;
+    private final ItemClient itemClient;
 
-    public ItemController(@Qualifier("ItemServiceDbImpl") ItemService itemService) {
-        this.itemService = itemService;
+    public ItemController(@Qualifier("ItemServiceDbImpl") ItemClient itemService) {
+        this.itemClient = itemService;
     }
 
     @ResponseBody
     @PostMapping
-    public ItemDto addItem(@Valid @RequestBody ItemDto item,
-                           @RequestHeader("X-Sharer-User-Id") int userId) {
+    public ResponseEntity<Object> addItem(@Valid @RequestBody ItemRequestDto item,
+                                          @RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId) {
         log.info("Получен запрос на добавление вещи.");
-        return itemService.addItem(item, userId);
+        return itemClient.addItem(item, userId);
     }
 
     @ResponseBody
     @PatchMapping("/{id}")
-    public ItemDto updateItem(@Valid @RequestBody ItemDto item,
-                              @PathVariable int id,
-                              @RequestHeader("X-Sharer-User-Id") int userId) {
+    public ResponseEntity<Object> updateItem(@Valid @RequestBody ItemRequestDto item,
+                              @PathVariable @PositiveOrZero int id,
+                              @RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId) {
         log.info("Получен запрос на обновление вещи.");
-        return itemService.updateItem(id, item, userId);
+        return itemClient.updateItem(id, item, userId);
     }
 
     @ResponseBody
     @GetMapping("/{id}")
-    public ItemDtoBookingsComments getItemById(@PathVariable int id,
-                                               @RequestHeader("X-Sharer-User-Id") int userId) {
+    public ResponseEntity<Object> getItemById(@PathVariable @PositiveOrZero int id,
+                                               @RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId) {
         log.info("Получен запрос на получение вещи с ID - {}.", id);
-        return itemService.getItem(id, userId);
+        return itemClient.getItem(id, userId);
     }
 
     @ResponseBody
     @GetMapping
-    public List<ItemDtoBookingsComments> getItems(@RequestHeader("X-Sharer-User-Id") int userId,
+    public ResponseEntity<Object> getItems(@RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId,
                                                   @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
                                                   @RequestParam(value = "size", defaultValue = "20") @Min(0) Integer size) {
-        return itemService.getItems(userId, from, size);
+        return itemClient.getItems(userId, from, size);
     }
 
     @ResponseBody
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestHeader(value = "X-Sharer-User-Id", required = false) int userId,
+    public ResponseEntity<Object> search(@RequestHeader(value = "X-Sharer-User-Id", required = false) @PositiveOrZero int userId,
                                 @RequestParam String text,
                                 @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
                                 @RequestParam(value = "size", defaultValue = "20") @Min(0) int size) {
-        return itemService.search(userId, text, from, size);
+        return itemClient.search(userId, text, from, size);
     }
 
     @ResponseBody
     @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(@RequestHeader(value = "X-Sharer-User-Id") int userId,
-                                 @PathVariable int itemId,
-                                 @RequestBody CommentDtoTextOnly comment) {
-        return itemService.addComment(userId, itemId, comment);
+    public ResponseEntity<Object> addComment(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
+                                 @PathVariable @PositiveOrZero int itemId,
+                                 @RequestBody CommentRequestDto comment) {
+        return itemClient.addComment(userId, itemId, comment);
     }
 }
