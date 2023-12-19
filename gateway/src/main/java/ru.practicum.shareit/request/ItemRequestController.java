@@ -47,15 +47,15 @@ public class ItemRequestController {
     @ResponseBody
     @GetMapping("/all")
     public ResponseEntity<Object> getAllRequests(@RequestHeader(value = "X-Sharer-User-Id") int userId,
-                                                        @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                                        @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive int size) {
+                                                 @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
+                                                 @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive int size) {
         return requestClient.getAllRequests(userId, from, size);
     }
 
     @ResponseBody
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getOneRequest(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
-                                                 @PathVariable @PositiveOrZero int requestId) {
+                                                @PathVariable @PositiveOrZero int requestId) {
         return requestClient.getOneRequest(userId, requestId);
     }
 }

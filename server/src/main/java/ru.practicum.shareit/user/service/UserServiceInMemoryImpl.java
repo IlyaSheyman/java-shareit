@@ -56,7 +56,7 @@ public class UserServiceInMemoryImpl implements UserService {
 
     @Override
     public UserDto delete(int id) {
-        for (Item item: itemStorage.getAll(id)) {
+        for (Item item : itemStorage.getAll(id)) {
             itemStorage.delete(item.getId(), id);
         }
         return userMapper.toUserDto(userStorage.delete(id));

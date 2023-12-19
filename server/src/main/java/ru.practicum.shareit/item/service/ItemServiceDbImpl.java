@@ -171,7 +171,7 @@ public class ItemServiceDbImpl implements ItemService {
     @Override
     public List<ItemDtoBookingsComments> getItems(int userId, int from, int size) {
         List<ItemDtoBookingsComments> itemsDto = new ArrayList<>();
-        for (Item i : itemRepository.findAll(PageRequest.of(from/size, size))) {
+        for (Item i : itemRepository.findAll(PageRequest.of(from / size, size))) {
             if (i.getOwner().getId() == userId) {
                 ItemDtoBookingsComments itemDto = itemMapper.toItemDtoWithBookings(i);
                 setLastAndNextBookings(i.getId(), itemDto);
@@ -187,7 +187,7 @@ public class ItemServiceDbImpl implements ItemService {
             List<ItemDto> result = new ArrayList<>();
 
             if (!text.isEmpty()) {
-                Page<Item> itemsPage = itemRepository.findAll(PageRequest.of(from/size, size));
+                Page<Item> itemsPage = itemRepository.findAll(PageRequest.of(from / size, size));
 
                 result = itemsPage.getContent().stream()
                         .filter(i -> (i.getName().toLowerCase().contains(text.toLowerCase())

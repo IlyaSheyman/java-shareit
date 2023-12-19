@@ -44,8 +44,8 @@ public class ItemController {
     @ResponseBody
     @PatchMapping("/{id}")
     public ResponseEntity<Object> updateItem(@Valid @RequestBody ItemRequestDto item,
-                              @PathVariable @PositiveOrZero int id,
-                              @RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId) {
+                                             @PathVariable @PositiveOrZero int id,
+                                             @RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId) {
         log.info("Получен запрос на обновление вещи.");
         return itemClient.updateItem(id, item, userId);
     }
@@ -53,7 +53,7 @@ public class ItemController {
     @ResponseBody
     @GetMapping("/{id}")
     public ResponseEntity<Object> getItemById(@PathVariable @PositiveOrZero int id,
-                                               @RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId) {
+                                              @RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId) {
         log.info("Получен запрос на получение вещи с ID - {}.", id);
         return itemClient.getItem(id, userId);
     }
@@ -61,25 +61,25 @@ public class ItemController {
     @ResponseBody
     @GetMapping
     public ResponseEntity<Object> getItems(@RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId,
-                                                  @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
-                                                  @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
+                                           @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
+                                           @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
         return itemClient.getItems(userId, from, size);
     }
 
     @ResponseBody
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestHeader(value = "X-Sharer-User-Id", required = false) @PositiveOrZero int userId,
-                                @RequestParam String text,
-                                @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
-                                @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
+                                         @RequestParam String text,
+                                         @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
+                                         @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
         return itemClient.search(userId, text, from, size);
     }
 
     @ResponseBody
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> addComment(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
-                                 @PathVariable @PositiveOrZero int itemId,
-                                 @RequestBody CommentRequestDto comment) {
+                                             @PathVariable @PositiveOrZero int itemId,
+                                             @RequestBody CommentRequestDto comment) {
         return itemClient.addComment(userId, itemId, comment);
     }
 }

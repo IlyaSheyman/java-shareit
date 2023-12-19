@@ -44,8 +44,8 @@ public class BookingController {
     @ResponseBody
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> approveBooking(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
-                                             @PathVariable @PositiveOrZero int bookingId,
-                                             @RequestParam boolean approved) {
+                                                 @PathVariable @PositiveOrZero int bookingId,
+                                                 @RequestParam boolean approved) {
         log.info("Получен запрос на обновление статуса бронирования");
         return bookingClient.approveBooking(bookingId, userId, approved);
     }
@@ -53,7 +53,7 @@ public class BookingController {
     @ResponseBody
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
-                                         @PathVariable @PositiveOrZero int bookingId) {
+                                             @PathVariable @PositiveOrZero int bookingId) {
         log.info("Получен запрос на получение информации о бронировании");
 
         return bookingClient.getBooking(userId, bookingId);
@@ -62,9 +62,9 @@ public class BookingController {
     @ResponseBody
     @GetMapping
     public ResponseEntity<Object> getBookingByUserId(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
-                                                       @RequestParam(defaultValue = "ALL") String state,
-                                                       @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                                       @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
+                                                     @RequestParam(defaultValue = "ALL") String state,
+                                                     @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                     @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
         log.info("Получен запрос на получение списка всех бронирований текущего пользователя");
 
         return bookingClient.getBookingsByUserId(userId, state, from, size);
@@ -73,9 +73,9 @@ public class BookingController {
     @ResponseBody
     @GetMapping("/owner")
     public ResponseEntity<Object> getBookingsForAllItems(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
-                                                           @RequestParam(defaultValue = "ALL") String state,
-                                                           @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
-                                                           @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
+                                                         @RequestParam(defaultValue = "ALL") String state,
+                                                         @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
+                                                         @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
         log.info("Получен запрос на получение списка бронирований для всех вещей текущего пользователя");
 
         return bookingClient.getBookingsForAllItems(userId, state, from, size);

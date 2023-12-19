@@ -31,7 +31,7 @@ public class ItemRequestController {
     @ResponseBody
     @PostMapping
     public ItemRequestDto addItemRequest(@RequestBody ItemRequestDto request,
-                                  @RequestHeader("X-Sharer-User-Id") int userId) {
+                                         @RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получен запрос на добавление запроса на вещь.");
         return requestService.addItemRequest(request, userId);
     }

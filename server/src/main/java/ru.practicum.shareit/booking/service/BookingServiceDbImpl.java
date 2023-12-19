@@ -140,9 +140,9 @@ public class BookingServiceDbImpl implements BookingService {
 
     public List<Booking> getBookingsByStateAndId(String state, int userId, int from, int size) {
         List<Booking> bookings = new ArrayList<>();
-        Pageable pageRequest = PageRequest.of(from/size,
+        Pageable pageRequest = PageRequest.of(from / size,
                 size,
-                Sort.by(Sort.Direction.DESC, "start")) ;
+                Sort.by(Sort.Direction.DESC, "start"));
         switch (state) {
             case ("ALL"):
                 bookings = bookingRepository.findByBooker_Id(userId, pageRequest);
@@ -196,7 +196,7 @@ public class BookingServiceDbImpl implements BookingService {
     }
 
     public List<Booking> getBookingsByOwner(String state, int userId, int from, int size) {
-        PageRequest pageRequest = PageRequest.of(from/size,
+        PageRequest pageRequest = PageRequest.of(from / size,
                 size,
                 Sort.by(Sort.Direction.DESC, "start"));
 

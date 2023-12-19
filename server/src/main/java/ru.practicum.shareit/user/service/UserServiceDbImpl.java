@@ -111,7 +111,7 @@ public class UserServiceDbImpl implements UserService {
     @Transactional
     @Override
     public UserDto delete(int id) {
-        for (Item item: itemRepository.findAll()) {
+        for (Item item : itemRepository.findAll()) {
             if (item.getOwner().getId() == id) {
                 itemService.deleteItem(item.getId(), id);
             }

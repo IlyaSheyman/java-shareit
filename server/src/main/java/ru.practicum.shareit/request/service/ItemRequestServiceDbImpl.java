@@ -99,7 +99,7 @@ public class ItemRequestServiceDbImpl implements ItemRequestService {
             List<ItemRequestDtoWithItems> allRequests = new ArrayList<>();
 
             for (ItemRequest req : requestRepository.findByRequestor_IdNot(userId,
-                    PageRequest.of(from/size,
+                    PageRequest.of(from / size,
                             size,
                             Sort.by(Sort.Direction.DESC, "created")))) {
 
