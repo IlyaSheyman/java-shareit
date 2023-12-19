@@ -17,6 +17,8 @@ import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @Slf4j
@@ -59,8 +61,8 @@ public class ItemController {
     @ResponseBody
     @GetMapping
     public ResponseEntity<Object> getItems(@RequestHeader("X-Sharer-User-Id") @PositiveOrZero int userId,
-                                                  @RequestParam(value = "from", defaultValue = "0") Integer from,
-                                                  @RequestParam(value = "size", defaultValue = "20") Integer size) {
+                                                  @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
+                                                  @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
         return itemClient.getItems(userId, from, size);
     }
 
@@ -68,8 +70,8 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestHeader(value = "X-Sharer-User-Id", required = false) @PositiveOrZero int userId,
                                 @RequestParam String text,
-                                @RequestParam(value = "from", defaultValue = "0") Integer from,
-                                @RequestParam(value = "size", defaultValue = "20") Integer size) {
+                                @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
+                                @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
         return itemClient.search(userId, text, from, size);
     }
 

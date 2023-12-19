@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @RestController
@@ -61,8 +63,8 @@ public class BookingController {
     @GetMapping
     public ResponseEntity<Object> getBookingByUserId(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
                                                        @RequestParam(defaultValue = "ALL") String state,
-                                                       @RequestParam(value = "from", defaultValue = "0") Integer from,
-                                                       @RequestParam(value = "size", defaultValue = "20") Integer size) {
+                                                       @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                       @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
         log.info("Получен запрос на получение списка всех бронирований текущего пользователя");
 
         return bookingClient.getBookingsByUserId(userId, state, from, size);
@@ -72,8 +74,8 @@ public class BookingController {
     @GetMapping("/owner")
     public ResponseEntity<Object> getBookingsForAllItems(@RequestHeader(value = "X-Sharer-User-Id") @PositiveOrZero int userId,
                                                            @RequestParam(defaultValue = "ALL") String state,
-                                                           @RequestParam(value = "from", defaultValue = "0") Integer from,
-                                                           @RequestParam(value = "size", defaultValue = "20") Integer size) {
+                                                           @RequestParam(value = "from", defaultValue = "0") @Min(0) Integer from,
+                                                           @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive Integer size) {
         log.info("Получен запрос на получение списка бронирований для всех вещей текущего пользователя");
 
         return bookingClient.getBookingsForAllItems(userId, state, from, size);

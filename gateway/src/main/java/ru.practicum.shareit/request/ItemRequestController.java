@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.request.dto.RequestRequestDto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @RestController
@@ -46,8 +47,8 @@ public class ItemRequestController {
     @ResponseBody
     @GetMapping("/all")
     public ResponseEntity<Object> getAllRequests(@RequestHeader(value = "X-Sharer-User-Id") int userId,
-                                                        @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero int from,
-                                                        @RequestParam(value = "size", defaultValue = "20") @PositiveOrZero int size) {
+                                                        @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
+                                                        @RequestParam(value = "size", defaultValue = "20") @Min(1) @Positive int size) {
         return requestClient.getAllRequests(userId, from, size);
     }
 
