@@ -60,8 +60,8 @@ public class BookingController {
     @GetMapping
     public List<BookingDtoExtended> getBookingByUserId(@RequestHeader(value = "X-Sharer-User-Id") int userId,
                                                        @RequestParam(defaultValue = "ALL") String state,
-                                                       @RequestParam(value = "from") int from,
-                                                       @RequestParam(value = "size") int size) {
+                                                       @RequestParam(value = "from", defaultValue = "0") int from,
+                                                       @RequestParam(value = "size", defaultValue = "20") int size) {
         log.info("Получен запрос на получение списка всех бронирований текущего пользователя");
 
         return bookingService.getBookingsByUserId(userId, state, from, size);
@@ -71,8 +71,8 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingDtoExtended> getBookingsForAllItems(@RequestHeader(value = "X-Sharer-User-Id") int userId,
                                                            @RequestParam(defaultValue = "ALL") String state,
-                                                           @RequestParam(value = "from") int from,
-                                                           @RequestParam(value = "size") int size) {
+                                                           @RequestParam(value = "from", defaultValue = "0") int from,
+                                                           @RequestParam(value = "size", defaultValue = "20") int size) {
         log.info("Получен запрос на получение списка бронирований для всех вещей текущего пользователя");
 
         return bookingService.getBookingsByItemOwner(userId, state, from, size);
