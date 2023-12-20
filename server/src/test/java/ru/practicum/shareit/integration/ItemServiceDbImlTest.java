@@ -64,7 +64,7 @@ public class ItemServiceDbImlTest {
         Page<Item> mockItemPage = new PageImpl<>(mockItems);
 
         when(userRepository.existsById(userId)).thenReturn(true);
-        when(itemRepository.findAll(PageRequest.of(from / size, size))).thenReturn(mockItemPage);
+        when(itemRepository.findAllWithOrderBy(PageRequest.of(from / size, size))).thenReturn(mockItemPage);
         when(bookingRepository.findLastBookingByItemId(1)).thenReturn(new ArrayList<>());
         when(bookingRepository.findNextBookingByItemId(1)).thenReturn(new ArrayList<>());
         when(bookingRepository.findLastBookingByItemId(2)).thenReturn(new ArrayList<>());
